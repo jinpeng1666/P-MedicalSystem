@@ -5,7 +5,8 @@
     "moduleResolution": "Node",
     "strict": true,
     "baseUrl": "./", // 基本路径
-    "paths": { // 路径映射
+    "paths": {
+      // 路径映射
       "@/*": ["src/*"]
     },
     "esModuleInterop": true,
