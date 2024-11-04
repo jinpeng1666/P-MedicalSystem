@@ -1,13 +1,18 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
   "compilerOptions": {
-    "baseUrl": "./", // 解析非相对模块的基地址，默认是当前目录
-    "paths": { //路径映射，相对于baseUrl
+    "target": "ESNext", // 适配现代环境
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "baseUrl": "./", // 基本路径
+    "paths": { // 路径映射
       "@/*": ["src/*"]
-    }
-  }
+    },
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"], // 包含 src 文件夹下的所有文件
+  "exclude": ["node_modules"], // 排除 node_modules 文件夹
+  "references": []
 }
