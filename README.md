@@ -462,3 +462,203 @@ export default defineConfig({
 }
 
 ```
+
+> [!WARNING]
+>
+> tsconfig.json文件初始化的内容不一样了（原因未知），为了能让代码跑起来，只能使用之前的代码内容了
+
+下图是5月份的![配置src文件别名示例图1](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/配置src文件别名示例图1.jpg)
+
+下图是11月份的![配置src文件别名示例图2](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/配置src文件别名示例图2.jpg)
+
+tsconfig.json改为如下内容，测试后，文件别名可以正常使用
+
+![配置src文件别名示例图3](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/配置src文件别名示例图3.jpg)
+
+但是存在main.ts文件使用不了@的情况，改为如下代码并且将`vite.config.ts`文件也修改
+
+![配置scr别名示例图4](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/配置scr别名示例图4.jpg)
+
+![设置src文件夹别名示例图5](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/设置src文件夹别名示例图5.jpg)
+
+## 1-9集成scss
+
+> [!NOTE]
+>
+> 在配置styleLint时，已经安装了sass和sass-loader，但我还是`pnpm i scss`
+
+我们已经集成了sass，下面我们将引入一些全局样式
+
+第一步：
+
+在`src`文件夹，下面新建文件夹`styles`，新建`index.scss`、`reset.scss`和`variable.scss`文件
+
+第二步：
+
+将[scss-reset - npm (npmjs.com)](https://www.npmjs.com/package/scss-reset?activeTab=code)的文件内容引入到`reset.scss`文件里
+
+第三步：
+
+在`index.scss`文件中添加如下代码
+
+```
+@use './reset.scss'
+```
+
+第四步：
+
+在`main.ts`文件中添加如下代码
+
+```
+// 引入全局样式
+import '@/styles/index.scss'
+```
+
+## 1-10配置js-cookie
+
+第一步：
+
+```
+pnpm i js-cookie
+```
+
+下载js-cookie
+
+第二步：
+
+在utils文件夹下新建一个文件`auth.ts`，用来封装读取、修改和删除用户的token，将token存储在cookie，新建的文件内容如下
+
+```
+import Cookies from 'js-cookie'
+
+// 此处可自定义
+const TokenKey = 'vue_medical_system_token'
+
+export function getToken() {
+  return Cookies.get(TokenKey)
+}
+
+export function setToken(token: any) {
+  return Cookies.set(TokenKey, token)
+}
+
+export function removeToken() {
+  return Cookies.remove(TokenKey)
+}
+
+```
+
+第三步
+
+安装第三方的类型声明包来解决 TypeScript 找不到 `js-cookie` 的类型声明文件，因为 `js-cookie` 没有自带 `.d.ts` 类型文件的问题
+
+```
+pnpm add -D @types/js-cookie
+```
+
+## 1-11集成element-plus
+
+> 参考：[安装 | Element Plus](https://element-plus.org/zh-CN/guide/installation.html)
+
+第一步：
+
+下载element-plus
+
+```
+pnpm install element-plus @element-plus/icons-vue
+```
+
+第二步：
+
+按需引入element-plus相关的组件时，需要进行额外的插件
+
+```
+pnpm install -D unplugin-vue-components unplugin-auto-import
+```
+
+第三步：
+
+将下列代码插入到Vite的配置文件`vite.config.ts`中
+
+```
+import { defineConfig } from 'vite'
+// 这部分
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+
+export default defineConfig({
+  // ...
+  plugins: [
+    // ...
+    // 这部分
+    AutoImport({
+      resolvers: [ElementPlusResolver()],
+    }),
+    Components({
+      resolvers: [ElementPlusResolver()],
+    }),
+  ],
+})
+```
+
+## 1-12二次封装axios
+
+第一步：
+
+安装axios
+
+```
+pnpm i axios
+```
+
+第二步：
+
+在`src`文件夹下创建`utils`文件夹，再创建`request.ts`文件，文件内容如下：
+
+```
+// 对axios进行二次封装
+
+import axios from 'axios'
+
+// 引入element-plus的组件
+import { ElMessage } from 'element-plus'
+
+// 引入user仓库，判断是否包含token
+// import useUserStore from '@/store/modules/user.ts'
+
+const request = axios.create({
+  // baseURL: import.meta.env.VITE_APP_BASE_API,
+  timeout: 5000,
+})
+
+// 请求拦截器
+request.interceptors.request.use((config) => {
+  // const userStore = useUserStore()
+  // 判断仓库是否有token，有则配置每个请求带有token
+  // if (userStore.token) {
+  //   config.headers.token = userStore.token
+  // }
+  return config
+})
+
+// 响应拦截器
+request.interceptors.response.use(
+  // 响应成功回调
+  (response) => {
+    // 用于处理（简化数据）请求返回的数据
+    return response.data
+  },
+  // 响应失败回调
+  (error) => {
+    ElMessage({
+      type: 'error',
+      message: '请求错误',
+    })
+    return Promise.reject(error)
+  },
+)
+
+export default request
+
+```
