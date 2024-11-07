@@ -556,7 +556,54 @@ export function removeToken() {
 pnpm add -D @types/js-cookie
 ```
 
-## 1-11集成element-plus
+## 1-11配置环境变量
+
+第一步：
+
+在项目目录下，创建文件`.env.development`，文件内容如下：
+
+```
+# 变量必须以 VITE_ 为前缀才能暴露给外部读取
+NODE_ENV = 'development'
+VITE_APP_TITLE = '医疗系统'
+VITE_APP_BASE_API = '/api'
+```
+
+第二步：
+
+在项目目录下，创建文件`.env.production`，文件内容如下：
+
+```
+NODE_ENV = 'production'
+VITE_APP_TITLE = '医疗系统'
+VITE_APP_BASE_API = '/prod-api'
+```
+
+第三步：
+
+在项目目录下，创建文件`.env.test`，文件内容如下：
+
+```
+# 变量必须以 VITE_ 为前缀才能暴露给外部读取
+NODE_ENV = 'test'
+VITE_APP_TITLE = '医疗系统'
+VITE_APP_BASE_API = '/test-api'
+```
+
+第四步：
+
+在`package.json`文件的scripts配置项中添加如下代码：
+
+```
+ "scripts": {
+    "build:test": "vue-tsc && vite build --mode test",
+    "build:pro": "vue-tsc && vite build --mode production",
+  },
+```
+
+完成如上配置，即可通过import.meta.env来获取环境变量
+
+## 1-12集成element-plus
 
 > 参考：[安装 | Element Plus](https://element-plus.org/zh-CN/guide/installation.html)
 
@@ -602,7 +649,11 @@ export default defineConfig({
 })
 ```
 
-## 1-12二次封装axios
+## 1-13二次封装axios
+
+> 参考：[默认配置 | Axios中文文档 | Axios中文网](https://www.axios-http.cn/docs/config_defaults)
+>
+> [拦截器 | Axios中文文档 | Axios中文网](https://www.axios-http.cn/docs/interceptors)
 
 第一步：
 
@@ -662,3 +713,432 @@ request.interceptors.response.use(
 export default request
 
 ```
+
+## 1-14集成pinia
+
+> 参考：[开始 | Pinia](https://pinia.vuejs.org/zh/getting-started.html)
+
+第一步：
+
+安装pinia
+
+```
+pnpm i pinia
+```
+
+第二步：
+
+在`src`文件夹下创建`store`文件夹，同时在该文件夹下创建`index.ts`文件，文件内容如下
+
+```
+import { createPinia } from 'pinia'
+
+const pinia = createPinia()
+
+export default pinia
+
+```
+
+第三步：
+
+在`store`文件夹下创建`modules`文件夹，存放各个模块的仓库
+
+第四步：
+
+在`main.ts`文件添加如下内容
+
+```
+// 引入仓库
+import pinia from './store'
+app.use(pinia)
+```
+
+## 1-15配置mock
+
+> 参考：[vite-plugin-mock/README.zh_CN.md at main · vbenjs/vite-plugin-mock](https://github.com/vbenjs/vite-plugin-mock/blob/main/README.zh_CN.md)
+
+第一步：
+
+下载相关的插件
+
+```
+pnpm install -D vite-plugin-mock@2.9.6 mockjs
+```
+
+第二步：
+
+将下列代码插入到Vite的配置文件`vite.config.ts`中
+
+```
+// 这里
+import { viteMockServe } from 'vite-plugin-mock'
+
+export default defineConfig({ command })=> {
+  return {
+    plugins: [
+      vue(),
+      // 这里
+      viteMockServe({
+        localEnabled: command === 'serve',
+      }),
+    ],
+  }
+}
+```
+
+> [!NOTE]
+>
+> defineConfig传入的参数发生改变
+
+第三步：
+
+在项目目录下（和src文件夹同级）创建一个mock的文件夹，创建一个user.ts的文件，文件内容如下
+
+```
+// 用户数据
+function createUserList() {
+  return [
+    {
+      userId: 1,
+      avatar:
+        'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+      username: 'admin',
+      password: '111111',
+      desc: '平台管理员',
+      roles: ['平台管理员'],
+      buttons: ['cuser.detail'],
+      routes: ['home'],
+      token: 'Admin Token',
+    },
+    {
+      userId: 2,
+      avatar:
+        'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+      username: 'system',
+      password: '111111',
+      desc: '系统管理员',
+      roles: ['系统管理员'],
+      buttons: ['cuser.detail', 'cuser.user'],
+      routes: ['home'],
+      token: 'System Token',
+    },
+  ]
+}
+
+export default [
+  {
+    url: '/api/user/info',
+    method: 'get',
+    response: () => {
+      return { code: 200, data: { ...createUserList() } }
+    },
+  },
+]
+
+```
+
+> [!NOTE]
+>
+> 可根据实际需求修改
+
+## 1-16配置nprogress
+
+第一步：
+
+下载nprogress
+
+```
+pnpm i nprogress
+```
+
+第二步：
+
+安装@types/nprogress
+
+```
+npm install @types/nprogress -D
+```
+
+## 1-17api接口统一管理
+
+在`src`文件夹下创建`api`文件夹，用来统一管理项目的接口
+
+## 1-18配置vue-router
+
+第一步：
+
+下载vue-router
+
+```
+pnpm add vue-router@4
+```
+
+第二步：
+
+在`src`文件夹下新建文件夹`router`，同时新建两个文件`index.ts`和`routes.ts`（用于存放所有权限通用路由表和动态需要根据权限加载的路由表）
+
+`routes.ts`文件示例：
+
+```
+// 存放所有权限通用路由表
+
+export const constantRouterMap = [
+  {
+    path: '/login',
+    component: () => import('@/views/login/index.vue'),
+    name: 'login',
+  },
+  {
+    path: '/',
+    component: () => import('@/layout/index.vue'),
+    name: 'layout',
+    redirect: '/home',
+    children: [
+      {
+        path: '/home',
+        component: () => import('@/views/home/index.vue'),
+      },
+      {
+        path: '/salary',
+        component: () => import('@/views/salary/index.vue'),
+      },
+      {
+        path: '/selfAttendance',
+        component: () => import('@/views/selfAttendance/index.vue'),
+      },
+    ],
+  },
+]
+
+// 存放需要根据权限动态加载的路由表
+export const asyncRouterMap = [
+  {
+    path: '/',
+    component: () => import('@/layout/index.vue'),
+    name: 'layout',
+    redirect: '/home',
+    children: [
+      {
+        path: '/employee',
+        component: () => import('@/views/employee/index.vue'),
+        meta: { role: ['Manager', 'Minister'] },
+      },
+      {
+        path: '/finance',
+        component: () => import('@/views/finance/index.vue'),
+        meta: { role: ['Manager', 'Finance'] },
+      },
+      {
+        path: '/attendance',
+        component: () => import('@/views/attendance/index.vue'),
+        meta: { role: ['Manager', 'Attendance'] },
+      },
+      {
+        path: '/operation',
+        component: () => import('@/views/operation/index.vue'),
+        meta: { role: ['Manager', 'Operation'] },
+      },
+      {
+        path: '/authority',
+        component: () => import('@/views/authority/index.vue'),
+        meta: { role: ['Manager'] },
+      },
+    ],
+  },
+]
+
+```
+
+`index.ts`文件示例：
+
+```
+import { createRouter, createWebHashHistory } from 'vue-router'
+import { constantRouterMap } from './routes'
+
+// 引入nprogress
+import nprogress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+// 免登录白名单
+const whiteList = ['/login', '/404']
+
+// 引入user仓库
+import useUserStore from '@/store/modules/user'
+
+// 引入permission方法
+import { hasPermission } from '@/utils/permission.ts'
+
+// 创建路由
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes: constantRouterMap,
+  scrollBehavior() {
+    return {
+      left: 0,
+      top: 0,
+    }
+  },
+})
+
+// 全局前置路由
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore()
+  nprogress.start()
+  if (userStore.token) {
+    // 第一层判断：token值存在
+    if (userStore.info.avatar === '' || userStore.info.userName === '') {
+      // 第二层判断：info未获取
+      await userStore.userMessage()
+    }
+    if (to.path === '/login') {
+      // 第三层判断：路由路径是登陆页面路径
+      next('/')
+    } else {
+      // 第三层判断：路由路径不是登陆页面路径
+      if (to.meta && to.meta.role) {
+        // 第四层判断：页面需要权限
+        if (hasPermission(userStore.info.roles, to)) {
+          // 第五层：有权限
+          next()
+        } else {
+          // 第五层判断：无权限
+          next('/404')
+        }
+      } else {
+        // 第三层判断：页面不需要权限
+        next()
+      }
+    }
+  } else {
+    // 第一层判断：token值不存在
+    if (whiteList.includes(to.path)) {
+      // 第二层判断：路由路径在免登录白名单上
+      next()
+    } else {
+      // 第二层登录：登录路径不在免登录白名单上
+      next('/login')
+    }
+  }
+})
+
+// 全局后置路由
+router.afterEach(() => {
+  nprogress.done()
+})
+
+// 导出router
+export default router
+
+```
+
+第三步：
+
+在`main.ts`文件中，加入如下内容：
+
+```
+// 引入路由
+import router from './router'
+app.use(router)
+```
+
+###
+
+## 1-19权限校验工具类
+
+`permission.ts`文件存放在`src/utils`文件夹下，文件内容如下：
+
+```
+// 校验用户是否具有访问这个路由的权限
+// roles：用户身份
+// routes：传入动态路由表中二级路由对象
+export function hasPermission(roles: any, routes: any) {
+  return roles.some((role: any) => {
+    return routes.meta.role.includes(role)
+  })
+}
+```
+
+该方法需要传入roles和routes这两个参数。
+
+roles是用户对应的权限数组，routes是一个路由对象。
+
+在路由对象中通过meta标签来标示该页面能访问的权限，如`meta: { role: ['Manager','Minister'] }`表示该页面只有Manager或者Minister的权限才能有资格进入。
+
+# 2-权限校验
+
+## 2-1二次封装axios
+
+> [!NOTE]
+>
+> 配置请参考[上面](##1-13二次封装axios)，此处重点在于业务逻辑的介绍
+
+**自定义axios**
+
+1. 设置baseURL，需要结合[配置环境变量](##1-11配置环境变量)
+2. 设置timeout
+
+**请求拦截器**
+
+1. 判断user仓库是否存有token，有则设置请求头携带token
+
+**响应拦截器**
+
+1. 响应成功，简化请求返回的数据
+2. 响应失败，调用ElMessage组件，展示错误信息
+
+## 2-1配置api
+
+```
+import request from '@/utils/request'
+
+import type { loginForm, loginResponseData, userResponseData } from './types'
+
+enum API {
+  LOGIN_URL = '/user/login',
+  USERINFO_URL = '/user/info',
+}
+
+// 登录接口方法
+export const reqLogin = (data: loginForm) =>
+  request.post<any, loginResponseData>(API.LOGIN_URL, data)
+
+// 获取用户信息接口方法
+export const reqUserInfo = () =>
+  request.get<any, userResponseData>(API.USERINFO_URL)
+
+```
+
+## 2-2配置user仓库
+
+> [!NOTE]
+>
+> 需要使用js-cookie和自定义的api
+>
+> 创建`src/store/modules`路径下的`user.ts`文件
+
+**state**
+
+1. 初始化时，仓库中的Token需要读取本地Token
+2. 包括token和用户其他信息（用户姓名，头像等）
+
+**actions**
+
+> [!NOTE]
+>
+> 含有三种方法，用户登录，获取用户信息，退出登录
+
+1. 用户登录方法：调用api中的用户登录方法，请求成功，则为state中的token设置值，并将token存储于本地cookie
+2. 获取用户信息方法：用Token获取用户其他信息，为state中其他用户信息设置值
+3. 退出登录
+
+## 2-2配置路由
+
+路由要判断仓库里面是否有token
+
+**全局前置路由**
+
+1. 开启nprogress
+
+**全局后置路由**
+
+1. 关闭nprogress
