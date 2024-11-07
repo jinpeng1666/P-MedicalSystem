@@ -7,6 +7,8 @@ import 'element-plus/dist/index.css'
 import { ElButton } from 'element-plus'
 // 引入pinia
 import pinia from './store'
+// 引入路由
+import router from './router'
 
 const app = createApp(App)
 
@@ -14,5 +16,7 @@ const app = createApp(App)
 app.use(ElButton)
 //使用pinia
 app.use(pinia)
+//使用router
+app.use(router)
 
 app.mount('#app')
