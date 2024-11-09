@@ -1,4 +1,6 @@
-// 对axios进行二次封装
+/**
+ * 对axios进行二次封装
+ */
 
 import axios from 'axios'
 
@@ -6,20 +8,20 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
 // 引入user仓库，判断是否包含token
-// import useUserStore from '@/store/modules/user.ts'
+import useUserStore from '@/store/modules/user'
 
 const request = axios.create({
-  // baseURL: import.meta.env.VITE_APP_BASE_API,
+  baseURL: import.meta.env.VITE_APP_BASE_API,
   timeout: 5000,
 })
 
 // 请求拦截器
 request.interceptors.request.use((config) => {
-  // const userStore = useUserStore()
+  const userStore = useUserStore()
   // 判断仓库是否有token，有则配置每个请求带有token
-  // if (userStore.token) {
-  //   config.headers.token = userStore.token
-  // }
+  if (userStore.token) {
+    config.headers.token = userStore.token
+  }
   return config
 })
 
