@@ -863,6 +863,72 @@ npm install @types/nprogress -D
 
 在`src`文件夹下创建`api`文件夹，用来统一管理项目的接口
 
+`api/user/index.ts`文件示例如下
+
+```
+import request from '@/utils/request'
+
+import type { loginForm, loginResponseData, userResponseData } from './types'
+
+enum API {
+  LOGIN_URL = '/user/login',
+  USERINFO_URL = '/user/info',
+}
+
+// 登录接口方法
+export const reqLogin = (data: loginForm) =>
+  request.post<any, loginResponseData>(API.LOGIN_URL, data)
+
+// 获取用户信息接口方法
+export const reqUserInfo = () =>
+  request.get<any, userResponseData>(API.USERINFO_URL)
+
+```
+
+`api/user/type.ts`文件示例如下
+
+```
+interface dataType {
+  token?: string
+  message?: string
+}
+
+interface userInfo {
+  userId: number
+  avatar: string
+  username: string
+  password: string
+  desc: string
+  roles: string[]
+  buttons: string[]
+  routes: string[]
+  token: string
+}
+
+interface user {
+  checkUser: userInfo
+}
+
+// 登录接口需要携带参数的ts类型
+export interface loginForm {
+  username: string
+  password: string
+}
+
+// 登录接口返回的数据类型
+export interface loginResponseData {
+  code: number
+  data: dataType
+}
+
+// 获取用户信息接口返回的数据类型
+export interface userResponseData {
+  code: number
+  data: user
+}
+
+```
+
 ## 1-18配置vue-router
 
 第一步：
@@ -1066,7 +1132,15 @@ roles是用户对应的权限数组，routes是一个路由对象。
 
 # 2-权限校验
 
-## 2-1二次封装axios
+## 2-1封装js-cookie
+
+> [!NOTE]
+>
+> 配置请参考[上面](##1-10配置js-cookie)，此处重点在于业务逻辑的介绍
+
+需要使用第三方库js-cookie，对本地的cookie进行操作，对用户的token进行存储、设置和删除
+
+## 2-2二次封装axios
 
 > [!NOTE]
 >
@@ -1086,29 +1160,15 @@ roles是用户对应的权限数组，routes是一个路由对象。
 1. 响应成功，简化请求返回的数据
 2. 响应失败，调用ElMessage组件，展示错误信息
 
-## 2-1配置api
+## 2-3配置api
 
-```
-import request from '@/utils/request'
+> [!NOTE]
+>
+> 配置请参考[上面](##1-17api接口统一管理)，此处重点在于业务逻辑的介绍
 
-import type { loginForm, loginResponseData, userResponseData } from './types'
+将业务模块和api一一对应，方便维护
 
-enum API {
-  LOGIN_URL = '/user/login',
-  USERINFO_URL = '/user/info',
-}
-
-// 登录接口方法
-export const reqLogin = (data: loginForm) =>
-  request.post<any, loginResponseData>(API.LOGIN_URL, data)
-
-// 获取用户信息接口方法
-export const reqUserInfo = () =>
-  request.get<any, userResponseData>(API.USERINFO_URL)
-
-```
-
-## 2-2配置user仓库
+## 2-4配置user仓库
 
 > [!NOTE]
 >
@@ -1131,7 +1191,7 @@ export const reqUserInfo = () =>
 2. 获取用户信息方法：用Token获取用户其他信息，为state中其他用户信息设置值
 3. 退出登录
 
-## 2-2配置路由
+## 2-5配置路由
 
 路由要判断仓库里面是否有token
 
