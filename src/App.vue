@@ -1,13 +1,7 @@
 <template>
-  <div>
-    <h1>医疗管理系统</h1>
-  </div>
+  <router-view></router-view>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts"></script>
 
-</script>
-
-<style scoped>
-
-</style>
+<style scoped></style>
