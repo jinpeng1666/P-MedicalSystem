@@ -9,6 +9,8 @@ import { ElButton } from 'element-plus'
 import pinia from './store'
 // 引入路由
 import router from './router'
+// 配置svg
+import 'virtual:svg-icons-register'
 
 const app = createApp(App)
 

@@ -10,6 +10,9 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 // 集成mock
 import { viteMockServe } from 'vite-plugin-mock'
 
+// 配置svg
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+
 export default defineConfig(({ command }) => {
   return {
     plugins: [
@@ -24,6 +27,13 @@ export default defineConfig(({ command }) => {
       // 集成mock
       viteMockServe({
         localEnabled: command === 'serve',
+      }),
+      // 配置svg
+      createSvgIconsPlugin({
+        // Specify the icon folder to be cached
+        iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
+        // Specify symbolId format
+        symbolId: 'icon-[dir]-[name]',
       }),
     ],
     resolve: {
