@@ -1113,7 +1113,7 @@ app.use(router)
 
 `permission.ts`文件存放在`src/utils`文件夹下，文件内容如下：
 
-```
+```ts
 // 校验用户是否具有访问这个路由的权限
 // roles：用户身份
 // routes：传入动态路由表中二级路由对象
@@ -1130,15 +1130,70 @@ roles是用户对应的权限数组，routes是一个路由对象。
 
 在路由对象中通过meta标签来标示该页面能访问的权限，如`meta: { role: ['Manager','Minister'] }`表示该页面只有Manager或者Minister的权限才能有资格进入。
 
+## 1-20配置svg
+
+第一步：
+
+安装依赖
+
+```
+pnpm install vite-plugin-svg-icons -D
+```
+
+第二步：
+
+将下列代码插入到Vite的配置文件`vite.config.ts`中
+
+```ts
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons' // 这部分内容
+export default () => {
+  return {
+    plugins: [
+      // 这部分内容
+      createSvgIconsPlugin({
+        // Specify the icon folder to be cached
+        iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
+        // Specify symbolId format
+        symbolId: 'icon-[dir]-[name]',
+      }),
+    ],
+  }
+}
+```
+
+第三步：
+
+在`main.ts`文件中添加如下代码
+
+```ts
+import 'virtual:svg-icons-register'
+```
+
+**示例**
+
+在`src/assest/icons`创建`logo.svg`文件，到[iconfont-阿里巴巴矢量图标库](https://www.iconfont.cn/)复制svg的代码到这个文件里面，在需要使用的地方，编写如下的代码
+
+```
+<svg style="width: 30px; height: 30px">
+	<use xlink:href="#icon-logo"></use>
+</svg>
+```
+
+href属性值需要是`#icon-logo`，其中logo是svg文件名
+
 # 2-权限校验
+
+![关系展示图](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/关系展示图.jpg)
 
 ## 2-1封装js-cookie
 
 > [!NOTE]
 >
-> 配置请参考[上面](##1-10配置js-cookie)，此处重点在于业务逻辑的介绍
+> 如何封装和配置请参考[上面](##1-10配置js-cookie)，此处扩展一些其他内容
 
-需要使用第三方库js-cookie，对本地的cookie进行操作，对用户的token进行存储、设置和删除
+- 封装的目的是简化代码逻辑，提高代码可维护性，增强可复用性，同时提供统一的接口便于集中管理
+- 增强功能：如果需要扩展其他功能，可以在封装之后的方法体内进行设置
+- 使用第三方库js-cookie的目的是管理和操作浏览器的Cookie，对用户的token进行存储、设置和删除
 
 ## 2-2二次封装axios
 
@@ -1148,7 +1203,7 @@ roles是用户对应的权限数组，routes是一个路由对象。
 
 **自定义axios**
 
-1. 设置baseURL，需要结合[配置环境变量](##1-11配置环境变量)
+1. 设置baseURL，可以结合[配置环境变量](##1-11配置环境变量)
 2. 设置timeout
 
 **请求拦截器**
@@ -1193,7 +1248,13 @@ roles是用户对应的权限数组，routes是一个路由对象。
 
 ## 2-5配置路由
 
-路由要判断仓库里面是否有token
+> [!NOTE]
+>
+> 配置请参考[上面](##1-18配置vue-router)，此处重点在于业务逻辑的介绍
+
+**路由**
+
+需要在`src/router/routes.ts`文件下存放，通用路由和权限路由
 
 **全局前置路由**
 
@@ -1202,3 +1263,32 @@ roles是用户对应的权限数组，routes是一个路由对象。
 **全局后置路由**
 
 1. 关闭nprogress
+
+## 2-6登录业务逻辑
+
+![image-20241114190407347](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/image-20241114190407347.png)
+
+1. 表单校验完成才能点击登录按钮
+2. 用户点击登录，浏览器页面收集用户输入的账号和密码
+
+> [!NOTE]
+>
+> 表单校验参考：[Form 表单 | Element Plus](https://element-plus.org/zh-CN/component/form.html)
+
+# 3-布局搭建
+
+> [!NOTE]
+>
+> 参考：[Container 布局容器 | Element Plus](https://element-plus.org/zh-CN/component/container.html)和[Layout 布局 | Element Plus](https://element-plus.org/zh-CN/component/layout.html)
+
+**目录结构**
+
+## Layout
+
+## Logo
+
+## Menu
+
+> [!NOTE]
+>
+> 参考：[Scrollbar 滚动条 | Element Plus](https://element-plus.org/zh-CN/component/scrollbar.html)和[Menu 菜单 | Element Plus](https://element-plus.org/zh-CN/component/menu.html)
