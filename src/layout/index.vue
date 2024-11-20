@@ -4,6 +4,7 @@
     <!-- 左侧导航栏 -->
     <el-aside class="el-aside">
       <Logo></Logo>
+      <Menu></Menu>
     </el-aside>
     <!-- 右侧容器 -->
     <el-container>
@@ -21,6 +22,7 @@
 <script setup lang="ts">
 // 引入组件
 import Logo from './components/logo/index.vue'
+import Menu from './components/menu/index.vue'
 </script>
 
 <style scoped lang="scss">
@@ -29,6 +31,7 @@ import Logo from './components/logo/index.vue'
 // 总容器
 .total-container {
   height: 100vh;
+  min-height: variable.$container-min-height;
   // 左侧导航栏
   .el-aside {
     width: variable.$el-aside-width;
