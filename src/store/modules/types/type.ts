@@ -5,8 +5,8 @@ export interface UserState {
   avatar: string
 }
 
-// route
+// route数据类型
 import type { RouteRecordRaw } from 'vue-router'
 export interface typeRoute {
-  menuRoutes: RouteRecordRaw[]
+  constantRouterMap: RouteRecordRaw[]
 }
