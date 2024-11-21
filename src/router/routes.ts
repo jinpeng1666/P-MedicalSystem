@@ -17,6 +17,26 @@ export const constantRouterMap = [
       {
         path: '/home',
         component: () => import('@/views/home/index.vue'),
+        meta: {
+          title: '首页',
+        },
+        children: [],
+      },
+      {
+        path: '/employee',
+        component: () => import('@/views/employee/index.vue'),
+        meta: {
+          title: '员工',
+        },
+        children: [],
+      },
+      {
+        path: '/department',
+        component: () => import('@/views/department/index.vue'),
+        meta: {
+          title: '部门',
+        },
+        children: [],
       },
     ],
   },

@@ -1,12 +1,33 @@
 <template>
   <el-scrollbar class="scrollbar">
-    <el-menu class="menu-container">
-      <el-menu-item index="1">123</el-menu-item>
+    <el-menu class="menu-container" router :default-active="$route.path">
+      <MenuItem :menuList="filteredRouterMap"></MenuItem>
     </el-menu>
   </el-scrollbar>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { computed } from 'vue'
+// 引入路由对象
+import { useRoute } from 'vue-router'
+// 获取路由对象
+const $route = useRoute()
+
+// 从仓库引入静态路由
+import useRoutesStore from '@/store/modules/routes'
+let routesStore = useRoutesStore()
+let constantRouterMap = routesStore.constantRouterMap
+
+// 引入menuItem组件
+import MenuItem from './component/menuItem/index.vue'
+
+// 过滤constantRouterMap
+const filteredRouterMap = computed(() => {
+  return constantRouterMap.filter(
+    (item) => item.children && item.children.length > 0,
+  )[0].children
+})
+</script>
 
 <style scoped lang="scss">
 // 导入全局样式
