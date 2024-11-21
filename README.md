@@ -1281,14 +1281,82 @@ href属性值需要是`#icon-logo`，其中logo是svg文件名
 >
 > 参考：[Container 布局容器 | Element Plus](https://element-plus.org/zh-CN/component/container.html)和[Layout 布局 | Element Plus](https://element-plus.org/zh-CN/component/layout.html)
 
-**目录结构**
+![布局搭建](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/布局搭建.jpg)
 
-## Layout
+## 3-1Layout
 
-## Logo
+**项目目录结构**
 
-## Menu
+![项目目录结构图示](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/项目目录结构图示.jpg)
+
+## 3-2Logo
+
+就一个普通组件
+
+## 3-3Menu
 
 > [!NOTE]
 >
 > 参考：[Scrollbar 滚动条 | Element Plus](https://element-plus.org/zh-CN/component/scrollbar.html)和[Menu 菜单 | Element Plus](https://element-plus.org/zh-CN/component/menu.html)
+
+**说明**
+
+- 左侧导航栏中的Menu菜单，需要根据`@/router/routes.ts`中配置的`constantRouterMap`（所有权限通用路由表）和`asyncRouterMap`（动态加载路由表）路由动态生成，但是`constantRouterMap`中存放的路由，并不是所有的路由都需要展示在菜单中
+- 菜单中可能会出现包含嵌套的子菜单，所以需要使用递归组件
+- 为了方便后续的使用，将`@/router/routes.ts`中`constantRouterMap`和`asyncRouterMap`存放在名为`routes.ts`的仓库中
+- 在路由中，需要配置对应路由元的信息，用于给菜单起标题
+
+**过滤通用路由表**
+
+`constantRouterMap`中存放的路由，并不是所有的路由都需要展示在菜单中，那么可以给需要展示的路由添加`children`属性，根据是由有这个属性，来决定是否展示
+
+`@/store/modules/routes.ts`展示
+
+```ts
+// 从仓库引入静态路由
+import useRoutesStore from '@/store/modules/routes'
+let routesStore = useRoutesStore()
+let constantRouterMap = routesStore.constantRouterMap
+// 过滤constantRouterMap
+const filteredRouterMap = computed(() => {
+  return constantRouterMap.filter(
+    (item) => item.children && item.children.length > 0,
+  )
+})
+```
+
+**递归组件**
+
+- 创建一个组件`@/layout/components/menu/component/menuItem/index.vue`，这个组件需要接受`menuList`属性，属性值是一个数组，数组中的的每一个对象就是路由
+- 在`@/layout/components/menu/index.vue`，将`constantRouterMap`中存放的路由进行过滤，因为不是所有的路由都需要在菜单中进行展示的（如404，登录等），将过滤好的数组传递给`<MenuItem />`组件
+- 在`@/layout/components/menu/component/menuItem/index.vue`组件中，对每一个路由的`children`属性进行判断，如果没有子路由，就用`<el-menu-item />`展示菜单，如果有子路由，就用`<el-sub-menu />`展示折叠路由，并在此标签里面再次使用`<MenuItem />`，进行递归
+
+`@/layout/components/menu/component/menuItem/index.vue`代码如下
+
+```vue
+<template>
+  <template v-for="(item, index) in menuList" :key="index">
+    <!-- 没有子路由 -->
+    <el-menu-item v-if="item.children.length < 1" :index="item.path">
+      <template #title>{{ item.meta.title }}</template>
+    </el-menu-item>
+    <!-- 有多个子路由 -->
+    <el-sub-menu v-if="item.children.length >= 1" :index="item.path">
+      <template #title>{{ item.meta.title }}</template>
+      <MenuItem :menuList="item.children"></MenuItem>
+    </el-sub-menu>
+  </template>
+</template>
+
+<script setup lang="ts">
+import { defineProps } from 'vue'
+defineProps(['menuList'])
+</script>
+<script lang="ts">
+export default {
+  name: 'MenuItem',
+}
+</script>
+
+<style scoped></style>
+```
