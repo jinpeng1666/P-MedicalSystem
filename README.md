@@ -627,7 +627,7 @@ pnpm install -D unplugin-vue-components unplugin-auto-import
 
 将下列代码插入到Vite的配置文件`vite.config.ts`中
 
-```
+```ts
 import { defineConfig } from 'vite'
 // 这部分
 import AutoImport from 'unplugin-auto-import/vite'
@@ -1180,6 +1180,33 @@ import 'virtual:svg-icons-register'
 ```
 
 href属性值需要是`#icon-logo`，其中logo是svg文件名
+
+## 1-21配置Icon图标
+
+> [!NOTE]
+>
+> 参考：[Icon 图标 | Element Plus](https://element-plus.org/zh-CN/component/icon.html)
+>
+> 在[集成element-plus](##1-12集成element-plus)的时候yi'j
+
+第一步：
+
+```
+pnpm install @element-plus/icons-vue
+```
+
+第二步：
+
+注册所有图标，在`main.ts`文件添加如下代码
+
+```ts
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
+const app = createApp(App)
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
+```
 
 # 2-权限校验
 
