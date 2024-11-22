@@ -19,6 +19,7 @@ export const constantRouterMap = [
         component: () => import('@/views/home/index.vue'),
         meta: {
           title: '首页',
+          icon: 'HomeFilled',
         },
         children: [],
       },
@@ -27,14 +28,35 @@ export const constantRouterMap = [
         component: () => import('@/views/employee/index.vue'),
         meta: {
           title: '员工',
+          icon: 'Avatar',
         },
-        children: [],
+        children: [
+          {
+            path: '/zjp',
+            // component: () => import('@/views/home/index.vue'),
+            meta: {
+              title: 'zjp',
+              icon: 'User',
+            },
+            children: [],
+          },
+          {
+            path: '/dmh',
+            // component: () => import('@/views/home/index.vue'),
+            meta: {
+              title: 'dmh',
+              icon: 'User',
+            },
+            children: [],
+          },
+        ],
       },
       {
         path: '/department',
         component: () => import('@/views/department/index.vue'),
         meta: {
           title: '部门',
+          icon: 'Grid',
         },
         children: [],
       },
