@@ -1,9 +1,10 @@
-interface dataType {
-  token?: string
-  message?: string
+// 登录请求返回的数据
+export interface loginData {
+  token: string
 }
 
-interface userInfo {
+// 获取用户信息请求返回的数据
+export interface infoData {
   userId: number
   avatar: string
   username: string
@@ -15,24 +16,15 @@ interface userInfo {
   token: string
 }
 
-interface user {
-  checkUser: userInfo
-}
-
-// 登录接口需要携带参数的ts类型
+// 登录请求体
 export interface loginForm {
   username: string
   password: string
 }
 
-// 登录接口返回的数据类型
-export interface loginResponseData {
+// 所有请求返回的数据
+export interface responseResult {
   code: number
-  data: dataType
-}
-
-// 获取用户信息接口返回的数据类型
-export interface userResponseData {
-  code: number
-  data: user
+  message: string
+  data: loginData | infoData | object
 }

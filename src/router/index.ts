@@ -32,7 +32,7 @@ router.beforeEach(async (to, from, next) => {
   nprogress.start()
   if (userStore.token) {
     // 第一层判断：token值存在
-    if (userStore.avatar === '' || userStore.userName === '') {
+    if (userStore.info === null) {
       // 第二层判断：info未获取
       await userStore.userMessage()
     }
