@@ -5,25 +5,37 @@ function createUserList() {
       userId: 1,
       avatar:
         'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-      username: 'admin',
+      username: 'dean1',
       password: '111111',
-      desc: '平台管理员',
-      roles: ['平台管理员'],
-      buttons: ['cuser.detail'],
-      routes: ['home'],
-      token: 'Admin Token',
+      desc: '院长1',
+      roles: ['Dean'],
+      buttons: [],
+      routes: [],
+      token: 'Dean1 Token',
     },
     {
       userId: 2,
       avatar:
         'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-      username: 'system',
+      username: 'doctor1',
       password: '111111',
-      desc: '系统管理员',
-      roles: ['系统管理员'],
-      buttons: ['cuser.detail', 'cuser.user'],
-      routes: ['home'],
-      token: 'System Token',
+      desc: '医生1',
+      roles: ['Doctor'],
+      buttons: [],
+      routes: [],
+      token: 'Doctor1 Token',
+    },
+    {
+      userId: 3,
+      avatar:
+        'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+      username: 'nurse1',
+      password: '111111',
+      desc: '护士1',
+      roles: ['Nurse'],
+      buttons: [],
+      routes: [],
+      token: 'nurse1 Token',
     },
   ]
 }
@@ -63,7 +75,7 @@ export default [
         return { code: 201, message: '获取用户信息失败', data: {} }
       }
       //如果有返回成功信息
-      return { code: 200, message: '获取用户信息成功', data: { checkUser } }
+      return { code: 200, message: '获取用户信息成功', data: { ...checkUser } }
     },
   },
 ]
