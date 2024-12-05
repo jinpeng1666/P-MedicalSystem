@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { constantRouterMap } from './routes'
+import { toRaw } from 'vue'
 
 // 引入nprogress
 import nprogress from 'nprogress'
@@ -25,6 +26,8 @@ const router = createRouter({
     }
   },
 })
+// 引入route仓库
+import useRoutesStore from '@/store/modules/routes'
 
 // 全局前置路由
 router.beforeEach(async (to, from, next) => {
@@ -35,6 +38,17 @@ router.beforeEach(async (to, from, next) => {
     if (userStore.info === null) {
       // 第二层判断：info未获取
       await userStore.userMessage()
+
+      // 引入route仓库
+      const routesStore = useRoutesStore()
+      // 动态获取路由
+      const addRoutes = routesStore.addRoutes // 获取根据权限过滤后的路由
+
+      // 动态添加路由
+      addRoutes.forEach((route) => {
+        // toRaw(route)
+        router.addRoute('layout', toRaw(route))
+      })
     }
     if (to.path === '/login') {
       // 第三层判断：路由路径是登陆页面路径
@@ -43,7 +57,7 @@ router.beforeEach(async (to, from, next) => {
       // 第三层判断：路由路径不是登陆页面路径
       if (to.meta && to.meta.role) {
         // 第四层判断：页面需要权限
-        if (hasPermission(userStore.roles, to)) {
+        if (hasPermission(userStore.info?.roles, to)) {
           // 第五层：有权限
           next()
         } else {

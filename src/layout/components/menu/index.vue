@@ -1,13 +1,13 @@
 <template>
   <el-scrollbar class="scrollbar">
     <el-menu class="menu-container" router :default-active="$route.path">
-      <MenuItem :menuList="filteredRouterMap"></MenuItem>
+      <MenuItem :menuList="mergedRouterMap"></MenuItem>
     </el-menu>
   </el-scrollbar>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, toRaw } from 'vue'
 // 引入路由对象
 import { useRoute } from 'vue-router'
 // 获取路由对象
@@ -17,15 +17,21 @@ const $route = useRoute()
 import useRoutesStore from '@/store/modules/routes'
 let routesStore = useRoutesStore()
 let constantRouterMap = routesStore.constantRouterMap
+let addRoutes = routesStore.addRoutes
 
 // 引入menuItem组件
 import MenuItem from './component/menuItem/index.vue'
 
 // 过滤constantRouterMap
-const filteredRouterMap = computed(() => {
-  return constantRouterMap.filter(
+let filteredRouterMap = toRaw(
+  constantRouterMap.filter(
     (item) => item.children && item.children.length > 0,
-  )[0].children
+  )[0].children,
+)
+
+// 合并filteredRouterMap和asyncRouterMap
+const mergedRouterMap = computed(() => {
+  return [...filteredRouterMap, ...toRaw(addRoutes)]
 })
 </script>
 

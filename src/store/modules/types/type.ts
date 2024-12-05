@@ -11,4 +11,5 @@ export interface UserState {
 import type { RouteRecordRaw } from 'vue-router'
 export interface typeRoute {
   constantRouterMap: RouteRecordRaw[]
+  asyncRouterMap: RouteRecordRaw[]
 }
