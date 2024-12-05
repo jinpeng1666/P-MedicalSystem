@@ -1187,7 +1187,7 @@ href属性值需要是`#icon-logo`，其中logo是svg文件名
 >
 > 参考：[Icon 图标 | Element Plus](https://element-plus.org/zh-CN/component/icon.html)
 >
-> 在[集成element-plus](##1-12集成element-plus)的时候yi'j
+> 在[集成element-plus](##1-12集成element-plus)的时候已经配置过了
 
 第一步：
 
@@ -1302,6 +1302,47 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 >
 > 表单校验参考：[Form 表单 | Element Plus](https://element-plus.org/zh-CN/component/form.html)
 
+## 2-7动态加载路由
+
+> 参考：[手摸手，带你用vue撸后台 系列二(登录权限篇)进入正题，做后台项目区别于做其它的项目，权限验证与安全性是非常重要的， - 掘金](https://juejin.cn/post/6844903478880370701#heading-3)
+
+**全局前置路由守卫**
+
+- 判断仓库是由获取了用户信息（用户名、头像和权限等），如果没有则需要调用`userStore.userMessage()`来获取
+- 动态添加路由
+
+> [!IMPORTANT]
+>
+> 动态添加路由，动态路由表中的路由要作为`layout`的二级路由，进行添加
+
+**router/routes.ts**
+
+存放需要根据权限动态加载的路由表`asyncRouterMap`，利用路由元信息，设置当前路由需要的权限（用户当前的身份）
+
+**store/modules/routes.ts**
+
+通过`getters`计算需要动态添加的路由
+
+**utils/permission.ts**
+
+```ts
+/**
+ * 校验用户是否具有访问这个路由的权限
+ * @param roles 用户当前的所有身份
+ * @param route 某一个路由
+ * @returns boolean
+ */
+export function hasPermission(roles: any, route: any) {
+  return roles.some((role: any) => {
+    return route.meta.role.includes(role)
+  })
+}
+```
+
+**menu/index.vue**
+
+将`MenuItem`的`menuList`属性值设置为
+
 # 3-布局搭建
 
 > [!NOTE]
@@ -1365,11 +1406,21 @@ const filteredRouterMap = computed(() => {
   <template v-for="(item, index) in menuList" :key="index">
     <!-- 没有子路由 -->
     <el-menu-item v-if="item.children.length < 1" :index="item.path">
-      <template #title>{{ item.meta.title }}</template>
+      <template #title>
+        <el-icon>
+          <component :is="item.meta.icon"></component>
+        </el-icon>
+        {{ item.meta.title }}
+      </template>
     </el-menu-item>
     <!-- 有多个子路由 -->
     <el-sub-menu v-if="item.children.length >= 1" :index="item.path">
-      <template #title>{{ item.meta.title }}</template>
+      <template #title>
+        <el-icon>
+          <component :is="item.meta.icon"></component>
+        </el-icon>
+        {{ item.meta.title }}
+      </template>
       <MenuItem :menuList="item.children"></MenuItem>
     </el-sub-menu>
   </template>
@@ -1385,5 +1436,22 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+// 导入全局样式
+@use '@/styles/variable.scss' as variable;
+::v-deep(.el-menu-item) {
+  background-color: variable.$el-aside-background;
+  &:hover {
+    background-color: #ecf5ff; // 鼠标悬停背景颜色
+  }
+}
+</style>
 ```
+
+**动态加载路由**
+
+> [!NOTE]
+>
+> 参考：[动态加载路由](##2-7动态加载路由)
+
+将`filteredRouterMap`加上动态加载的路由
