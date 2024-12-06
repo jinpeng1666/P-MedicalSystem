@@ -46,18 +46,6 @@ export const constantRouterMap = [
       },
     ],
   },
-  // 404路由
-  {
-    path: '/404',
-    component: () => import('@/views/404/index.vue'),
-    name: '404',
-  },
-  // 其他不存在路由
-  {
-    path: '/:pathMatch(.*)*',
-    redirect: '/404',
-    name: 'any',
-  },
 ]
 
 // 存放需要根据权限动态加载的路由表
@@ -72,7 +60,7 @@ export const asyncRouterMap = [
     },
     children: [
       {
-        path: '/acl/permission',
+        path: '/permission',
         component: () => import('@/views/acl/permission/index.vue'),
         meta: {
           title: '权限分配',
@@ -82,7 +70,7 @@ export const asyncRouterMap = [
         children: [],
       },
       {
-        path: '/acl/managementSalary',
+        path: '/managementSalary',
         component: () => import('@/views/acl/managementSalary/index.vue'),
         meta: {
           title: '薪资管理',
@@ -92,5 +80,17 @@ export const asyncRouterMap = [
         children: [],
       },
     ],
+  },
+  // 404路由
+  {
+    path: '/404',
+    component: () => import('@/views/404/index.vue'),
+    name: '404',
+  },
+  // 其他不存在路由
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/404',
+    name: 'any',
   },
 ]

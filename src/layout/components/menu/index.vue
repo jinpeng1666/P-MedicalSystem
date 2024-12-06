@@ -1,6 +1,11 @@
 <template>
   <el-scrollbar class="scrollbar">
-    <el-menu class="menu-container" router :default-active="$route.path">
+    <el-menu
+      class="menu-container"
+      router
+      :default-active="$route.path"
+      active-text-color="#fca311"
+    >
       <MenuItem :menuList="mergedRouterMap"></MenuItem>
     </el-menu>
   </el-scrollbar>
@@ -28,10 +33,16 @@ let filteredRouterMap = toRaw(
     (item) => item.children && item.children.length > 0,
   )[0].children,
 )
+//过滤addRoutes
+let filterAddRoutes = toRaw(
+  addRoutes.filter((item) => {
+    return item.meta
+  }),
+)
 
 // 合并filteredRouterMap和asyncRouterMap
 const mergedRouterMap = computed(() => {
-  return [...filteredRouterMap, ...toRaw(addRoutes)]
+  return [...filteredRouterMap, ...filterAddRoutes]
 })
 </script>
 

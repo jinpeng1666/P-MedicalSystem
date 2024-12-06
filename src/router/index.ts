@@ -43,12 +43,11 @@ router.beforeEach(async (to, from, next) => {
       const routesStore = useRoutesStore()
       // 动态获取路由
       const addRoutes = routesStore.addRoutes // 获取根据权限过滤后的路由
-
       // 动态添加路由
       addRoutes.forEach((route) => {
-        // toRaw(route)
         router.addRoute('layout', toRaw(route))
       })
+      next({ ...to, replace: true })
     }
     if (to.path === '/login') {
       // 第三层判断：路由路径是登陆页面路径
