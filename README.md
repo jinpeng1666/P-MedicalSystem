@@ -1308,20 +1308,23 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 **全局前置路由守卫**
 
+需要完成如下两个功能
+
 - 判断仓库是由获取了用户信息（用户名、头像和权限等），如果没有则需要调用`userStore.userMessage()`来获取
-- 动态添加路由
+- 动态添加路由，使用`addRoute`方法，参考[接口：Router | Vue Router](https://router.vuejs.org/zh/api/interfaces/Router.html#Methods-addRoute)
 
 > [!IMPORTANT]
 >
-> 动态添加路由，动态路由表中的路由要作为`layout`的二级路由，进行添加
+> 动态路由表中的路由要作为`layout`的子路由，进行添加，所以使用`addRoute`方法，需要传入第一个参数`parentName`的值
 
 **router/routes.ts**
 
-存放需要根据权限动态加载的路由表`asyncRouterMap`，利用路由元信息，设置当前路由需要的权限（用户当前的身份）
+存放需要根据权限动态加载的路由表`asyncRouterMap`，利用路由元信息，设置当前路由需要的权限（用户的身份）
 
 **store/modules/routes.ts**
 
-通过`getters`计算需要动态添加的路由
+- 通过`getters`计算需要动态添加的路由`addRoutes`
+- `addRoutes`计算需要使用用户仓库中`info`数据，当全局前置路由守卫获取了`info`，`addRoutes`也会动态计算出来，然后在全局前置路由守卫获取完`info`的下一步就是动态添加路由
 
 **utils/permission.ts**
 
@@ -1333,6 +1336,10 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
  * @returns boolean
  */
 export function hasPermission(roles: any, route: any) {
+  if (!Array.isArray(roles)) {
+    console.error('roles应该是一个数组')
+    return false // 如果roles不是数组，直接返回false
+  }
   return roles.some((role: any) => {
     return route.meta.role.includes(role)
   })
@@ -1341,7 +1348,18 @@ export function hasPermission(roles: any, route: any) {
 
 **menu/index.vue**
 
-将`MenuItem`的`menuList`属性值设置为
+将`MenuItem`组件的`menuList`属性值设置为`mergedRouterMap`，该属性是由`filteredRouterMap`和`asyncRouterMap`合并而成
+
+### todo
+
+> [!CAUTION]
+>
+> 如果当前网页的路径为需要权限的路径，当点击刷新浏览器页面的时候，网页会跳转到404页面。
+>
+> 原因：
+>
+> - 404页面一定要最后加载，如果放在`constantRouterMap`一同声明了`404`，后面的页面都会被拦截到404
+> - 当页面刷新了之后，Vue Router会重新加载，此时页面已经挂载了，但是全局前置路由中动态路由还没有完成添加，完成添加之后，可以`next({ ...to, replace: true })`，但是存在当前`before(to, form, next)`中`to`的`meta`属性值为空的问题，并且出现重复调用`next()`的问题
 
 # 3-布局搭建
 
@@ -1366,6 +1384,35 @@ export function hasPermission(roles: any, route: any) {
 > [!NOTE]
 >
 > 参考：[Scrollbar 滚动条 | Element Plus](https://element-plus.org/zh-CN/component/scrollbar.html)和[Menu 菜单 | Element Plus](https://element-plus.org/zh-CN/component/menu.html)
+
+> [!CAUTION]
+>
+> ```
+> <el-menu-item v-if="item.children.length < 1" :index="item.path">
+> 	<el-icon>
+> 		<component :is="item.meta.icon"></component>
+> 	</el-icon>
+> 	<template #title>
+> 		{{ item.meta.title }}
+> 	</template>
+> </el-menu-item>
+>
+> <el-sub-menu v-if="item.children.length >= 1" :index="item.path">
+> 	<template #title>
+> 		<el-icon>
+> 			<component :is="item.meta.icon"></component>
+>         </el-icon>
+> 		<span>{{ item.meta.title }}</span>
+> 	</template>
+> 	<MenuItem :menuList="item.children"></MenuItem>
+> </el-sub-menu>
+> ```
+>
+> 为了避免`el-menu`使用`collapse`属性出现问题，要按照官方的写法
+>
+> `el-menu-item`的图标需要写在`template`插槽的外面
+>
+> `el-sub-menu`的图标需要写在`template`插槽的里面，标题需要使用`span`标签包裹
 
 **说明**
 
