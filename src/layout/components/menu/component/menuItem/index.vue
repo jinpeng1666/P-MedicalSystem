@@ -2,10 +2,10 @@
   <template v-for="(item, index) in menuList" :key="index">
     <!-- 没有子路由 -->
     <el-menu-item v-if="item.children.length < 1" :index="item.path">
+      <el-icon>
+        <component :is="item.meta.icon"></component>
+      </el-icon>
       <template #title>
-        <el-icon>
-          <component :is="item.meta.icon"></component>
-        </el-icon>
         {{ item.meta.title }}
       </template>
     </el-menu-item>
@@ -15,7 +15,7 @@
         <el-icon>
           <component :is="item.meta.icon"></component>
         </el-icon>
-        {{ item.meta.title }}
+        <span>{{ item.meta.title }}</span>
       </template>
       <MenuItem :menuList="item.children"></MenuItem>
     </el-sub-menu>
