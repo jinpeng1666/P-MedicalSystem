@@ -9,7 +9,9 @@
     <!-- 右侧容器 -->
     <el-container>
       <!-- 右侧容器面包屑 -->
-      <el-header>头部</el-header>
+      <el-header>
+        <Tabbar></Tabbar>
+      </el-header>
       <!-- 右侧容器内容展示区 -->
       <el-main>
         <!-- 二级路由展示 -->
@@ -23,6 +25,7 @@
 // 引入组件
 import Logo from './components/logo/index.vue'
 import Menu from './components/menu/index.vue'
+import Tabbar from './components/tabbar/index.vue'
 </script>
 
 <style scoped lang="scss">
@@ -45,5 +48,9 @@ import Menu from './components/menu/index.vue'
   &:hover {
     background-color: #ecf5ff; // 鼠标悬停背景颜色
   }
+}
+// 设置el-header样式（覆盖element-plus默认样式）
+.el-header {
+  height: variable.$el-header-height;
 }
 </style>
