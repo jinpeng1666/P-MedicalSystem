@@ -1208,6 +1208,16 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 ```
 
+第三步：
+
+使用
+
+```vue
+<el-icon>
+	<Edit/> <!--此处为图标的名字-->
+</el-icon
+```
+
 # 2-权限校验
 
 ![关系展示图](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/关系展示图.jpg)
@@ -1350,7 +1360,7 @@ export function hasPermission(roles: any, route: any) {
 
 将`MenuItem`组件的`menuList`属性值设置为`mergedRouterMap`，该属性是由`filteredRouterMap`和`asyncRouterMap`合并而成
 
-### todo
+**存在的问题**
 
 > [!CAUTION]
 >
@@ -1502,3 +1512,46 @@ export default {
 > 参考：[动态加载路由](##2-7动态加载路由)
 
 将`filteredRouterMap`加上动态加载的路由
+
+**样式修改**
+
+如果想给`el-menu-item`标签设置自定义的样式（字体等），可以使用如下的代码
+
+```vue
+<style scoped lang="scss">
+::v-deep(.el-menu-item) {
+  font-size: 15px;
+  background-color: variable.$el-aside-background;
+  &:hover {
+    background-color: #ecf5ff; // 鼠标悬停背景颜色
+  }
+}
+</style>
+```
+
+这段代码放在`layout`组件中，放在`menuItem`组件中不生效，只能`el-sub-menu`组件生效
+
+同时还需要给`sub-menu`的`title`设置自定的样式，将下面的代码放在`menuItem`中
+
+```vue
+<style scoped lang="scss">
+//折叠sub-menu的title样式
+::v-deep(.el-sub-menu__title) {
+  font-size: 15px;
+  background-color: variable.$el-aside-background;
+  &:hover {
+    background-color: #ecf5ff; // 鼠标悬停背景颜色
+  }
+}
+</style>
+```
+
+## 3-4Tabbar
+
+**左侧**
+
+左侧包括一个图标和一个面包屑，点击图标可以实现左侧菜单的折叠和展开效果
+
+**右侧**
+
+右侧包含按钮、头像和下拉菜单
