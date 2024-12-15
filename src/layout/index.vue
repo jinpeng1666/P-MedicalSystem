@@ -38,4 +38,12 @@ import Menu from './components/menu/index.vue'
     background-color: variable.$el-aside-background;
   }
 }
+// 设置menu-item属性
+::v-deep(.el-menu-item) {
+  font-size: 15px;
+  background-color: variable.$el-aside-background;
+  &:hover {
+    background-color: #ecf5ff; // 鼠标悬停背景颜色
+  }
+}
 </style>

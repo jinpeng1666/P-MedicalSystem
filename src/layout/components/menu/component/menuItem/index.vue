@@ -35,7 +35,9 @@ export default {
 <style scoped lang="scss">
 // 导入全局样式
 @use '@/styles/variable.scss' as variable;
-::v-deep(.el-menu-item) {
+//折叠sub-menu的title样式
+::v-deep(.el-sub-menu__title) {
+  font-size: 15px;
   background-color: variable.$el-aside-background;
   &:hover {
     background-color: #ecf5ff; // 鼠标悬停背景颜色
