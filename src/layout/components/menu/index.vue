@@ -5,6 +5,8 @@
       router
       :default-active="$route.path"
       active-text-color="#fca311"
+      :collapse="settingStore.isFold"
+      :collapse-transition="false"
     >
       <MenuItem :menuList="mergedRouterMap"></MenuItem>
     </el-menu>
@@ -13,10 +15,16 @@
 
 <script setup lang="ts">
 import { computed, toRaw } from 'vue'
+
 // 引入路由对象
 import { useRoute } from 'vue-router'
+
 // 获取路由对象
 const $route = useRoute()
+
+// 引入setting仓库
+import useSettingStore from '@/store/modules/setting'
+const settingStore = useSettingStore()
 
 // 从仓库引入静态路由
 import useRoutesStore from '@/store/modules/routes'
@@ -33,6 +41,7 @@ let filteredRouterMap = toRaw(
     (item) => item.children && item.children.length > 0,
   )[0].children,
 )
+
 //过滤addRoutes
 let filterAddRoutes = toRaw(
   addRoutes.filter((item) => {

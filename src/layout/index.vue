@@ -2,7 +2,12 @@
   <!-- 总容器 -->
   <el-container class="total-container">
     <!-- 左侧导航栏 -->
-    <el-aside class="el-aside">
+    <el-aside
+      :class="{
+        'el-aside': !settingStore.isFold,
+        'el-aside-fold': settingStore.isFold,
+      }"
+    >
       <Logo></Logo>
       <Menu></Menu>
     </el-aside>
@@ -26,6 +31,10 @@
 import Logo from './components/logo/index.vue'
 import Menu from './components/menu/index.vue'
 import Tabbar from './components/tabbar/index.vue'
+
+// 引入setting仓库
+import useSettingStore from '@/store/modules/setting'
+const settingStore = useSettingStore()
 </script>
 
 <style scoped lang="scss">
@@ -38,6 +47,10 @@ import Tabbar from './components/tabbar/index.vue'
   // 左侧导航栏
   .el-aside {
     width: variable.$el-aside-width;
+    background-color: variable.$el-aside-background;
+  }
+  .el-aside-fold {
+    width: variable.$el-aside-fold-width;
     background-color: variable.$el-aside-background;
   }
 }

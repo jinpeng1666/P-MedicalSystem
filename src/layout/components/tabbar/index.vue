@@ -3,8 +3,8 @@
     <!-- 左侧 -->
     <el-col :span="10" class="tabbar_left">
       <!-- 图标 -->
-      <el-icon :size="20" style="margin-right: 10px">
-        <Fold />
+      <el-icon :size="20" style="margin-right: 10px" @click="changeIcon">
+        <component :is="settingStore.isFold ? 'Expand' : 'Fold'"></component>
       </el-icon>
       <!-- 面包屑 -->
       <el-breadcrumb separator-icon="ArrowRight">
@@ -41,7 +41,15 @@
   </el-row>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+// 引入setting仓库
+import useSettingStore from '@/store/modules/setting'
+const settingStore = useSettingStore()
+
+const changeIcon = () => {
+  settingStore.isFold = !settingStore.isFold
+}
+</script>
 
 <style scoped lang="scss">
 // 导入全局样式
