@@ -8,8 +8,13 @@
       </el-icon>
       <!-- 面包屑 -->
       <el-breadcrumb separator-icon="ArrowRight">
-        <el-breadcrumb-item :to="{ path: '/' }">homepage</el-breadcrumb-item>
-        <el-breadcrumb-item>promotion management</el-breadcrumb-item>
+        <el-breadcrumb-item
+          v-for="(item, index) in fliterRoute"
+          :key="index"
+          :to="{ path: item.path }"
+        >
+          <span>{{ item.meta.title }}</span>
+        </el-breadcrumb-item>
       </el-breadcrumb>
     </el-col>
     <!-- 右侧 -->
@@ -49,6 +54,16 @@ const settingStore = useSettingStore()
 const changeIcon = () => {
   settingStore.isFold = !settingStore.isFold
 }
+
+// 过滤面包屑需要展示的路由
+import { useRoute } from 'vue-router'
+const $route = useRoute()
+import { computed } from 'vue'
+let fliterRoute = computed(() => {
+  console.log()
+  return $route.matched.filter((route) => route.name !== 'layout')
+})
+console.log(fliterRoute)
 </script>
 
 <style scoped lang="scss">

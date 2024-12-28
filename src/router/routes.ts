@@ -58,6 +58,7 @@ export const asyncRouterMap = [
       icon: 'Lock',
       role: ['Dean'],
     },
+    redirect: '/permission',
     children: [
       {
         path: '/permission',
