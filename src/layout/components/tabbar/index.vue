@@ -20,7 +20,7 @@
     <!-- 右侧 -->
     <el-col :span="10" class="tabbar_right">
       <!-- 按钮 -->
-      <el-button type="primary" icon="Refresh" circle />
+      <el-button type="primary" icon="Refresh" circle @click="updateRefresh" />
       <el-button type="primary" icon="Setting" circle />
       <!-- 头像 -->
       <el-avatar
@@ -60,10 +60,13 @@ import { useRoute } from 'vue-router'
 const $route = useRoute()
 import { computed } from 'vue'
 let fliterRoute = computed(() => {
-  console.log()
   return $route.matched.filter((route) => route.name !== 'layout')
 })
-console.log(fliterRoute)
+
+// 用户点击刷新按钮
+const updateRefresh = () => {
+  settingStore.refresh = !settingStore.refresh
+}
 </script>
 
 <style scoped lang="scss">

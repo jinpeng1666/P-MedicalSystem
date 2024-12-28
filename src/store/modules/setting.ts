@@ -8,6 +8,8 @@ const useSettingStore = defineStore('Setting', {
     return {
       // 菜单折叠标记
       isFold: false,
+      // 刷新按钮
+      refresh: false,
     }
   },
 })

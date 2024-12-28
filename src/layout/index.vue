@@ -20,7 +20,7 @@
       <!-- 右侧容器内容展示区 -->
       <el-main>
         <!-- 二级路由展示 -->
-        <router-view></router-view>
+        <router-view v-if="flag"></router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -35,6 +35,23 @@ import Tabbar from './components/tabbar/index.vue'
 // 引入setting仓库
 import useSettingStore from '@/store/modules/setting'
 const settingStore = useSettingStore()
+
+// 控制路由组件是否展示
+import { ref } from 'vue'
+let flag = ref(true)
+
+// 监听settingStore中的refresh属性
+import { watch, nextTick } from 'vue'
+watch(
+  () => settingStore.refresh,
+  () => {
+    flag.value = false
+    nextTick(() => {
+      flag.value = true
+      console.log(123)
+    })
+  },
+)
 </script>
 
 <style scoped lang="scss">
