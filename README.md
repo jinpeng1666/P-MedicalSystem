@@ -42,7 +42,7 @@ npm init @eslint/config
 >
 > 使用的是`npm`
 
-![配置ESLint示例图1](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/配置ESLint示例图1.jpg)
+![配置ESLint示例图1](https://picgo-zjp.oss-cn-shenzhen.aliyuncs.com/配置ESLint示例图1.jpg)
 
 运行完成之后，目录中会有`.eslintrc.json`文件
 
@@ -110,7 +110,7 @@ npm init @eslint/config
 pnpm install -D eslint-plugin-import eslint-plugin-vue eslint-plugin-node eslint-plugin-prettier eslint-config-prettier eslint-plugin-node @babel/eslint-parser
 ```
 
-![配置ESLint示例图2](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/配置ESLint示例图2.jpg)
+![配置ESLint示例图2](https://picgo-zjp.oss-cn-shenzhen.aliyuncs.com/配置ESLint示例图2.jpg)
 
 第五步：
 
@@ -467,19 +467,19 @@ export default defineConfig({
 >
 > tsconfig.json文件初始化的内容不一样了（原因未知），为了能让代码跑起来，只能使用之前的代码内容了
 
-下图是5月份的![配置src文件别名示例图1](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/配置src文件别名示例图1.jpg)
+下图是5月份的![配置src文件别名示例图1](https://picgo-zjp.oss-cn-shenzhen.aliyuncs.com/配置src文件别名示例图1.jpg)
 
-下图是11月份的![配置src文件别名示例图2](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/配置src文件别名示例图2.jpg)
+下图是11月份的![配置src文件别名示例图2](https://picgo-zjp.oss-cn-shenzhen.aliyuncs.com/配置src文件别名示例图2.jpg)
 
 tsconfig.json改为如下内容，测试后，文件别名可以正常使用
 
-![配置src文件别名示例图3](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/配置src文件别名示例图3.jpg)
+![配置src文件别名示例图3](https://picgo-zjp.oss-cn-shenzhen.aliyuncs.com/配置src文件别名示例图3.jpg)
 
 但是存在main.ts文件使用不了@的情况，改为如下代码并且将`vite.config.ts`文件也修改
 
-![配置scr别名示例图4](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/配置scr别名示例图4.jpg)
+![配置scr别名示例图4](https://picgo-zjp.oss-cn-shenzhen.aliyuncs.com/配置scr别名示例图4.jpg)
 
-![设置src文件夹别名示例图5](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/设置src文件夹别名示例图5.jpg)
+![设置src文件夹别名示例图5](https://picgo-zjp.oss-cn-shenzhen.aliyuncs.com/设置src文件夹别名示例图5.jpg)
 
 ## 1-9集成scss
 
@@ -1220,7 +1220,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 # 2-权限校验
 
-![关系展示图](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/关系展示图.jpg)
+![关系展示图](https://picgo-zjp.oss-cn-shenzhen.aliyuncs.com/关系展示图.jpg)
 
 ## 2-1封装js-cookie
 
@@ -1303,7 +1303,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 ## 2-6登录业务逻辑
 
-![image-20241114190407347](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/image-20241114190407347.png)
+![image-20241114190407347](https://picgo-zjp.oss-cn-shenzhen.aliyuncs.com/image-20241114190407347.png)
 
 1. 表单校验完成才能点击登录按钮
 2. 用户点击登录，浏览器页面收集用户输入的账号和密码
@@ -1377,13 +1377,13 @@ export function hasPermission(roles: any, route: any) {
 >
 > 参考：[Container 布局容器 | Element Plus](https://element-plus.org/zh-CN/component/container.html)和[Layout 布局 | Element Plus](https://element-plus.org/zh-CN/component/layout.html)
 
-![布局搭建](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/布局搭建.jpg)
+![布局搭建](https://picgo-zjp.oss-cn-shenzhen.aliyuncs.com/布局搭建.jpg)
 
 ## 3-1Layout
 
 **项目目录结构**
 
-![项目目录结构图示](https://raw.githubusercontent.com/jinpeng1666/picgo/master/Typora/Medical/项目目录结构图示.jpg)
+![项目目录结构图示](https://picgo-zjp.oss-cn-shenzhen.aliyuncs.com/项目目录结构图示.jpg)
 
 ## 3-2Logo
 
@@ -1555,3 +1555,45 @@ export default {
 **右侧**
 
 右侧包含按钮、头像和下拉菜单
+
+### **3-4-1图标**
+
+- 设置一个`pinia`仓库，用来存放共享的数据(`isFold`)
+- 当用户点击这个图标的时候，将`isFold`的值取反
+- `logo`组件的title根据`isFold`动态展示
+
+### 3-4-2动画
+
+**todo**自定义动画该如何实现？
+
+关闭原本的动画效果
+
+```vue
+<template>
+  <el-menu :collapse-transition="false">...</el-menu>
+</template>
+```
+
+### 3-4-3面包屑
+
+面包屑的生成需要根据`route`进行动态生成，但是`route`需要过滤，将`layout`这个路由过滤掉
+
+### 3-4-4刷新按钮
+
+所谓刷新功能，即路由组件的销毁和创建
+
+第一步：
+
+在`setting.ts`仓库中设置一个属性`refresh`属性，来进行组件间通信，标记用户是否点击了刷新按钮
+
+第二步：
+
+用户点击了刷新按钮，则修改仓库中的`refresh`属性
+
+第三步：
+
+在`<router-view></router-view>`二级路由展示所在的组件，引入`setting.ts`仓库
+
+监听`refresh`属性的变化，通过给`<router-view></router-view>`设置`v-if`属性来刷新组件
+
+使用`nextTick`，当页面刷新完之后，再将`<router-view></router-view>`的`v-if`属性设置为`true`进行重新加载
